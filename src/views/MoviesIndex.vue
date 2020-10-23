@@ -2,7 +2,11 @@
   <div class="movies-index">
     <h1>Movies!</h1>
 
-    <div v-for="movie in movies">
+    Search by title: <input v-model="titleFilter" list="titles">
+    <datalist id="titles">
+      <option v-for="movie in movies">{{movie.title}}</option>
+    </datalist>
+    <div v-for="movie in filterBy(movies, titleFilter, 'title')">
       <router-link :to="`/movies/${movie.id}`">
         <h2>Title: {{ movie.title }}</h2>
       </router-link>
@@ -19,11 +23,15 @@
 
 <script>
 import axios from "axios";
+import Vue2Filters from "vue2-filters";
 
 export default {
+  mixins: [Vue2Filters.mixin],
+
   data: function() {
     return {
       movies: [],
+      titleFilter: "",
     };
   },
   created: function() {
